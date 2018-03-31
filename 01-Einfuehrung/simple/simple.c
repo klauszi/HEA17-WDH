@@ -5,12 +5,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int *
 mistake1 ()
 {
-  int buf[] = { 1, 1, 2, 3, 4, 5 };
-  return buf;
+  int *buf2 = malloc (sizeof (char) * 6);
+  int buf[] = { 1, 1, 2, 3, 4, 5 };//int buf[] = { 1, 1, 2, 3, 4, 5 };
+  memcpy(buf2,buf,sizeof(char) * 6);
+  return buf2;
 }
 
 int *
@@ -26,7 +29,7 @@ mistake3 ()
 {
   /* In dieser Funktion darf kein Speicher direkt allokiert werden. */
   int mistake2_ = 0;
-  int *buf = (int *) &mistake2;
+  int *buf = (int *) &mistake2_;// int *buf = (int *) &mistake2;
   buf[0] = 3;
   return buf;
 }
@@ -36,7 +39,7 @@ mistake4 ()
 {
   int *buf = malloc (sizeof (char) * 4);
   buf[4] = 4;
-  free (buf);
+  /* free (buf); */
   return buf;
 }
 
@@ -53,7 +56,7 @@ main (void)
 
   /* mhh muss hier noch etwas gefreed werden? */
   /* Fügen sie hier die korrekten aufrufe von free() ein */
-  free (p[1]);			/* welcher Pointer war das doch gleich?, TODO: Fixme... :-) */
+  /* free (p[1]);			#<{(| welcher Pointer war das doch gleich?, TODO: Fixme... :-) |)}># */
 
   return 0;
 }
