@@ -138,6 +138,19 @@ calculate (double** matrix, int iterations, int threads)
 				}
 			}
 
+            // einfaches printen; korrekt wenn nur ein Thread genutzt wird.
+			for (i = from; i < to; i++)
+			{
+				for (j = 0; j < N; j++)
+				{
+					for (l = 1; l <= 4; l++)
+					{
+						printf("%f", matrix[i][j]);
+					}
+				}
+			}
+
+
 			// TODO write
 
 			#pragma omp barrier
