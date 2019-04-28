@@ -1,6 +1,11 @@
 /* ************************************************************************ */
 /* Include standard header file.                                            */
 /* ************************************************************************ */
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -109,6 +114,13 @@ calculate (double** matrix, int iterations, int threads)
 	int i, j, k, l;
 	int tid;
 	int lines, from, to;
+    int file_descriptor = open("matrix.out", O_CREAT | O_WRONLY);
+
+    if (file_descriptor == -1)
+    {
+        printf("matrix.out cannot open. Exit");
+        exit(0);
+    }
 
 	tid = 0;
 	lines = from = to = -1;
@@ -143,10 +155,15 @@ calculate (double** matrix, int iterations, int threads)
 			{
 				for (j = 0; j < N; j++)
 				{
-					for (l = 1; l <= 4; l++)
-					{
-						printf("%f", matrix[i][j]);
-					}
+                    printf("%f", matrix[i][j]);
+				}
+			}
+
+			for (i = from; i < to; i++)
+			{
+				for (j = 0; j < N; j++)
+				{
+                    pwrite(file_descriptor, &matrix[i][j], 8, sizeof(double) * (i + j));
 				}
 			}
 
@@ -156,6 +173,7 @@ calculate (double** matrix, int iterations, int threads)
 			#pragma omp barrier
 		}
 	}
+    close(file_descriptor);
 }
 
 /* ************************************************************************ */
